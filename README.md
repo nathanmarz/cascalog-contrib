@@ -1,13 +1,11 @@
-# cascalog-contrib
+# Cascalog-Contrib
 
-FIXME: write description
+Extensions to the Cascalog MapReduce DSL.
 
 ## Usage
 
-FIXME: write
+Add the following to `project.clj`:
 
-## License
+    [cascalog-contrib "1.0.0-SNAPSHOT"]
 
-Copyright (C) 2011 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+Stay tuned for updates!
