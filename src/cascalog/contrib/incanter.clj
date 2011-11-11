@@ -4,7 +4,6 @@
             [incanter.core :as incanter]))
 
 (defn bar?-
-  "Accepts a subquery and."
   [subquery & opts]
   (let [data (incanter/matrix (first (??- subquery)))]
     (incanter/view (apply charts/bar-chart*
