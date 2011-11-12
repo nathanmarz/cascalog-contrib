@@ -121,7 +121,7 @@
                                                    (apply hash-map kwd-form))]
                                   (u/collectify dirseq)))))]
     (mapcat (fn [sym]
-              [sym (str checkpoint-dir "/" sym)])
+              [sym (str checkpoint-dir "/data/" sym)])
             tmp-syms)))
 
 (defmacro workflow [[checkpoint-dir] & bindings]
