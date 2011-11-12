@@ -1,4 +1,4 @@
-(defproject cascalog-contrib "1.0.1-SNAPSHOT"
+(defproject cascalog-contrib "1.0.0-SNAPSHOT"
   :description "Useful extensions to Cascalog."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [cascalog "1.8.3"]

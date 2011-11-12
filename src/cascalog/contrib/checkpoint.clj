@@ -26,12 +26,15 @@
     (struct Workflow fs (atom {}) checkpoint-dir (atom nil))))
 
 (defn add-component*
+  "Ideal version of this will take the tmp-dirs symbols and slap them
+  onto the end of the base directory, removing the need to manually
+  bind directories."
   [workflow name afn & {:keys [tmp-dirs deps] :or {deps :last}}]
-  (let [last-node @(::last-node-atom workflow)
+  (let [last-node  @(::last-node-atom workflow)
         graph-atom (::graph-atom workflow)
         deps       (case deps
                      :last (if last-node [last-node] [])
-                     :all (keys @graph-atom)
+                     :all  (keys @graph-atom)
                      (when deps
                        (u/collectify deps)))
         tmp-dirs   (when tmp-dirs
@@ -105,8 +108,25 @@
 (defmacro component [workflow name kwargs & body]
   `(add-component* ~workflow ~name (fn [] ~@body) ~@kwargs))
 
+(defn build-dir-bindings
+  "Constructs a sequence of alternating symbols and path strings,
+  given a sequence of workflow bindings and a base checkpoint
+  directory. Example result:
+
+  (some-path \"/my/root/some-path\")"
+  [checkpoint-dir bindings]
+  (let [tmp-syms (->> (partition 2 bindings)
+                      (mapcat (fn [[_ [kwd-form]]]
+                                (when-let [dirseq (:tmp-dirs
+                                                   (apply hash-map kwd-form))]
+                                  (u/collectify dirseq)))))]
+    (mapcat (fn [sym]
+              [sym (str checkpoint-dir "/" sym)])
+            tmp-syms)))
+
 (defmacro workflow [[checkpoint-dir] & bindings]
   (let [workflow-sym (gensym "workflow")
+        tmp-bindings (build-dir-bindings checkpoint-dir bindings)
         bindings (->> (partition 2 bindings)
                       (mapcat (fn [[name-sym code]]
                                 [name-sym (concat [`component
@@ -114,5 +134,6 @@
                                                    (str name-sym)]
                                                   code)])))]
     `(let [~workflow-sym (mk-workflow ~checkpoint-dir)
+           ~@tmp-bindings
            ~@bindings]
        (exec-workflow! ~workflow-sym))))
