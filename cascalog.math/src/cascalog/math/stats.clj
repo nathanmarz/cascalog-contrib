@@ -1,4 +1,4 @@
-(ns cascalog.contrib.stats
+(ns cascalog.math.stats
   (:use cascalog.api)
   (:require [cascalog.ops :as c]))
 

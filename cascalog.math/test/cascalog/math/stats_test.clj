@@ -1,4 +1,4 @@
-(ns cascalog.contrib.stats-test
+(ns cascalog.math.stats-test
   (:use [cascalog.contrib.stats]
         [midje sweet cascalog]))
 

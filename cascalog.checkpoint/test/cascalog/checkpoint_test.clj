@@ -1,5 +1,5 @@
-(ns cascalog.contrib.checkpoint-test
-  (:use cascalog.contrib.checkpoint))
+(ns cascalog.checkpoint-test
+  (:use cascalog.checkpoint))
 
 (defn run-test! []
     (workflow

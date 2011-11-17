@@ -1,4 +1,4 @@
-(ns cascalog.contrib.incanter
+(ns cascalog.incanter
   (:use cascalog.api)
   (:require [incanter.charts :as charts]
             [incanter.core :as incanter]))

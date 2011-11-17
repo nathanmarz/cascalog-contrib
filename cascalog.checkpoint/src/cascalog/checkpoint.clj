@@ -1,4 +1,4 @@
-(ns cascalog.contrib.checkpoint
+(ns cascalog.checkpoint
   "Alpha!"
   (:use hadoop-util.core)
   (:require [cascalog.util :as u])
