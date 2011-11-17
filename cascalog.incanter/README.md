@@ -6,6 +6,6 @@ Incanter integration for the Cascalog MapReduce DSL.
 
 Add the following to `project.clj`:
 
-    [cascalog-incanter "1.0.0-SNAPSHOT"]
+    [cascalog-incanter "0.1.0"]
 
 Stay tuned for updates!

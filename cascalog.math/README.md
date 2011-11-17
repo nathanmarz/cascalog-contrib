@@ -6,6 +6,6 @@ Helpful math extensions to the Cascalog MapReduce DSL.
 
 Add the following to `project.clj`:
 
-    [cascalog-math "1.0.0-SNAPSHOT"]
+    [cascalog-math "0.1.0"]
 
 Stay tuned for updates!

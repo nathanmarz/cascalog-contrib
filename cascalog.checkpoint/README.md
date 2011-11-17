@@ -6,6 +6,6 @@ Workflow checkpointing for Cascalog.
 
 Add the following to `project.clj`:
 
-    [cascalog-checkpoint "1.0.0]
+    [cascalog-checkpoint "0.1.0"]
 
 Stay tuned for updates!
