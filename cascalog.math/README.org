@@ -6,8 +6,6 @@ Helpful math extensions to the Cascalog MapReduce DSL.
 
 Add the following to =project.clj=:
 
-#+begin_src clojure
-[cascalog-math "0.1.0"]
-#+end_src
+    [cascalog-math "0.1.0"]
 
 Stay tuned for updates!
