@@ -2,10 +2,14 @@
 
 Extensions to the Cascalog MapReduce DSL.
 
-## Usage
+## Modules
 
-Add the following to `project.clj`:
+Here are links to the current modules:
 
-    [cascalog-contrib "1.0.0-SNAPSHOT"]
+* [cascalog-checkpoint](https://github.com/nathanmarz/cascalog-contrib/tree/master/cascalog.checkpoint)
+* [cascalog-math](https://github.com/nathanmarz/cascalog-contrib/tree/master/cascalog.math)
+* [cascalog-incanter](https://github.com/nathanmarz/cascalog-contrib/tree/master/cascalog.incanter)
 
-Stay tuned for updates!
+## Contributing
+
+If you'd like to work on a module for cascalog-contrib, contact Nathan Marz (nathanmarz@gmail.com) or Sam Ritchie (sritchie09@gmail.com). We'll get you set up as a committer.
