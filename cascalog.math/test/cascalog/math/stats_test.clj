@@ -1,6 +1,5 @@
 (ns cascalog.math.stats-test
-  (:use [cascalog.contrib.stats]
+  (:use [cascalog.math.stats]
         [midje sweet cascalog]))
 
-(deftest replace-me ;; FIXME: write
-  (is false "No tests have been written."))
+(fact?<- [[1]] [?x] ([[1]] ?x))
