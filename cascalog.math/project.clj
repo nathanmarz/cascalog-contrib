@@ -1,4 +1,4 @@
-(defproject cascalog-math "0.1.0"
+(defproject cascalog-math "0.1.1-SNAPSHOT"
   :description "Math modules for Cascalog."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [cascalog "1.8.3"]
