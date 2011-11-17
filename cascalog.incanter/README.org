@@ -1,0 +1,13 @@
+* Cascalog-Incanter
+
+Incanter integration for the Cascalog MapReduce DSL.
+
+** Usage
+
+Add the following to =project.clj=:
+
+#+begin_src clojure
+[cascalog-incanter "0.1.0"]
+#+end_src
+
+Stay tuned for updates!
