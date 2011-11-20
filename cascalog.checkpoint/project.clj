@@ -1,4 +1,4 @@
-(defproject cascalog-checkpoint "0.1.0"
+(defproject cascalog-checkpoint "0.1.1-SNAPSHOT"
   :description "Workflow checkpoints for the masses."
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [cascalog "1.8.3"]
