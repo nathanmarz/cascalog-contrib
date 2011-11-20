@@ -1,7 +1,7 @@
 (ns cascalog.checkpoint
   "Alpha!"
-  (:use hadoop-util.core)
-  (:require [cascalog.util :as u])
+  (:require [hadoop-util.core :as h]
+            [cascalog.util :as u])
   (:import [java.util Collection]
            [org.apache.log4j Logger]
            [java.util.concurrent Semaphore]
@@ -21,8 +21,8 @@
 (defstruct Workflow ::fs ::graph-atom ::checkpoint-dir ::last-node-atom)
 
 (defn mk-workflow [checkpoint-dir]
-  (let [fs (filesystem)]
-    (mkdirs fs checkpoint-dir)
+  (let [fs (h/filesystem)]
+    (h/mkdirs fs checkpoint-dir)
     (struct Workflow fs (atom {}) checkpoint-dir (atom nil))))
 
 (defn add-component*
@@ -48,20 +48,20 @@
 (defn- mk-runner
   [fs token node status-atom sem log]
   (Thread.
-   (constantly
-    (try (if-not (.exists fs (path token))
-           (do (doseq [t (::tmp-dirs node)]
-                 (delete fs t true))
-               ((::fn node))
-               (when-not (.createNewFile fs (path token))
-                 (u/throw-runtime
-                  (str "Unable to make checkpoint token " token))))
-           (.info log (str "Skipping " token "...")))
-         (reset! status-atom :successful)
-         (catch Throwable t
-           (.error log "Component failed" t)
-           (reset! status-atom :failed))
-         (finally (.release sem))))))
+   (fn []
+     (try (if-not (.exists fs (h/path token))
+            (do (doseq [t (::tmp-dirs node)]
+                  (h/delete fs t true))
+                ((::fn node))
+                (when-not (.createNewFile fs (h/path token))
+                  (u/throw-runtime
+                   (str "Unable to make checkpoint token " token))))
+            (.info log (str "Skipping " token "...")))
+          (reset! status-atom :successful)
+          (catch Throwable t
+            (.error log "Component failed" t)
+            (reset! status-atom :failed))
+          (finally (.release sem))))))
 
 (defn- fail-workflow!
   [log nodes-map]
@@ -75,7 +75,7 @@
     (u/throw-runtime "Workflow failed")))
 
 (defn exec-workflow! [workflow]
-  (let [fs (filesystem)
+  (let [fs (h/filesystem)
         log (Logger/getLogger "checkpointed-workflow")
         sem (Semaphore. 0)
         nodes (into {}
@@ -85,8 +85,8 @@
                            ::status status-atom
                            ::runner-thread (mk-runner
                                             fs
-                                            ( (::checkpoint-dir workflow)
-                                              "/" k)
+                                            (str (::checkpoint-dir workflow)
+                                                 "/" k)
                                             v
                                             status-atom
                                             sem
@@ -103,7 +103,7 @@
         (cond (contains? statuses :failed) (fail-workflow! log nodes)
               (some #{:running :unstarted} statuses) (recur)
               :else (.info log "Workflow completed successfully"))))
-    (delete fs (::checkpoint-dir workflow) true)))
+    (h/delete fs (::checkpoint-dir workflow) true)))
 
 (defmacro component [workflow name kwargs & body]
   `(add-component* ~workflow ~name (fn [] ~@body) ~@kwargs))
@@ -121,7 +121,8 @@
                                                    (apply hash-map kwd-form))]
                                   (u/collectify dirseq)))))]
     (mapcat (fn [sym]
-              [sym (str checkpoint-dir "/data/" sym)])
+              (let [s (str sym)]
+                [sym `(str ~checkpoint-dir "/data/" ~s)]))
             tmp-syms)))
 
 (defmacro workflow [[checkpoint-dir] & bindings]
