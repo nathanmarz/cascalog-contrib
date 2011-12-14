@@ -30,3 +30,9 @@ git checkout -b lion 4c5a2270863e0d906e5c3c7cd7a57a7f14436759
 JAVA_HOME=$(/usr/libexec/java_home) \
 C_INCLUDE_PATH=/opt/local/include LIBRARY_PATH=/opt/local/lib \
 CFLAGS="-arch x86_64" ant clean compile-native test tar
+
+### Configuring Hadoop
+
+More information here: http://www.cloudera.com/blog/2009/11/hadoop-at-twitter-part-1-splittable-lzo-compression/
+
+
