@@ -2,8 +2,7 @@
   :description "What do I do?"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [cascalog "1.8.3"]]
-  :dev-dependencies [[swank-clojure "1.4.0-SNAPSHOT"]
-                     [org.apache.hadoop/hadoop-core "0.20.2-dev"]
+  :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
                      [lein-multi "1.1.0-SNAPSHOT"]
                      [lein-marginalia "0.6.1"] ;; doc generation
                      [lein-midje "1.0.4"]      ;; for running midje tests
