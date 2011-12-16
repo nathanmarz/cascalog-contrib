@@ -1,0 +1,26 @@
+# use glob syntax.
+syntax: glob
+build
+target
+out
+lib
+pom.xml
+*.ser
+*.class
+*.jar
+*~
+*.bak
+*.off
+*.old
+.DS_Store
+*.#*
+*#*
+*.classpath
+*.project
+*.settings
+*.pyc
+*.dot
+.cake/
+.lein-failures
+.lein-deps-sum
+autodoc/
