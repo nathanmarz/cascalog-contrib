@@ -1,7 +1,7 @@
 (defproject cascalog-math "0.1.1-SNAPSHOT"
   :description "Math modules for Cascalog."
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [cascalog "1.8.3"]]
+                 [cascalog "1.8.4"]]
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
                      [lein-multi "1.1.0-SNAPSHOT"]
                      [lein-marginalia "0.6.1"]

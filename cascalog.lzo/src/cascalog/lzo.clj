@@ -16,6 +16,16 @@
                     (lzo/text-line ["line"]))]
     (apply lfs-tap scheme path opts)))
 
+(defn hfs-lzo-thrift
+  [path klass & opts]
+  (let [scheme (lzo/thrift-b64-line klass)]
+    (apply hfs-tap scheme path opts)))
+
+(defn hfs-lzo-protobuf
+  [path klass & opts]
+  (let [scheme (lzo/proto-b64-line klass)]
+    (apply hfs-tap scheme path opts)))
+
 (def lzo-settings
   {"mapred.map.output.compression.codec" "com.hadoop.compression.lzo.LzoCodec"
    "io.compression.codec.lzo.class" "com.hadoop.compression.lzo.LzoCodec"
