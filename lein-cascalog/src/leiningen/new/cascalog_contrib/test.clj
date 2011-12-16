@@ -1,6 +1,6 @@
 (ns cascalog.{{name}}-test
-    (:use cascalog.api
-          cascalog.{{name}}
+  (:use cascalog.api
+        cascalog.{{name}}
         [midje sweet cascalog]))
 
 (let [src [["truth"]]]

@@ -1,6 +1,6 @@
 (ns {{name}}.core-test
-    (:use cascalog.api
-          {{name}}.core
+  (:use cascalog.api
+        {{name}}.core
         [midje sweet cascalog]))
 
 (let [src [["truth"]]]
