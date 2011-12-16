@@ -1,0 +1,11 @@
+* Cascalog-ElephantDB
+
+Helpers for writing to elephantdb using the Cascalog MapReduce DSL.
+
+** Usage
+
+ElephantDB-Cascalog is hosted on a public maven repo [[http://clojars.org/cascalog-elephantdb][here]]. Add the following to =project.clj=:
+
+: [cascalog-elephantdb "0.2.0"]
+
+Stay tuned for updates!

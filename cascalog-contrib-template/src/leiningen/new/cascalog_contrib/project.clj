@@ -1,7 +1,8 @@
-(defproject cascalog-<name> "0.1.0"
-  :description "What do I do?"
+(defproject cascalog-{{name}} "0.1.0"
+  :source-path "src/clj"
+  :description "TODO: What do I do?"
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [cascalog "1.8.3"]]
+                 [cascalog "1.8.4"]]
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
                      [lein-multi "1.1.0-SNAPSHOT"]
                      [lein-marginalia "0.6.1"] ;; doc generation
@@ -12,8 +13,8 @@
   ;; full test suite, or "lein multi midje --with 1.2" to target a
   ;; specific bundle.
   :multi-deps {"1.2" [[org.clojure/clojure "1.2.1"]
-                      [cascalog "1.8.3"]
+                      [cascalog "1.8.4"]
                       [hadoop-util "0.2.4"]]
                "1.4" [[org.clojure/clojure "1.4.0-alpha2"]
-                      [cascalog "1.8.3"]
+                      [cascalog "1.8.4"]
                       [hadoop-util "0.2.4"]]})
