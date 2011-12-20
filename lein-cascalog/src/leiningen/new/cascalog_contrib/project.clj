@@ -5,8 +5,6 @@
                  [cascalog "1.8.4"]]
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
                      [lein-multi "1.1.0-SNAPSHOT"]
-                     [lein-marginalia "0.6.1"] ;; doc generation
-                     [lein-midje "1.0.4"]      ;; for running midje tests
                      [midje-cascalog "0.3.0"]] ;; for testing: http://goo.gl/EXyEV
   ;; multi-deps allows you to test against multiple releases of
   ;; clojure. run "lein multi deps" and "lein multi midje" to run the
