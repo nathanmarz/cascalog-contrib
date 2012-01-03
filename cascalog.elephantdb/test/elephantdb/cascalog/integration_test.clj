@@ -2,11 +2,10 @@
   (:use clojure.test
         elephantdb.cascalog.core
         [cascalog api testing])
-  (:require [elephantdb.testing :as t]
-            [elephantdb.config :as config]
+  (:require [elephantdb.common.testing :as t]
+            [elephantdb.common.config :as config]
             [cascalog.ops :as c])
-  (:import [org.apache.hadoop.io BytesWritable]
-           [elephantdb.persistence JavaBerkDB KeyValPersistence]
+  (:import [elephantdb.persistence JavaBerkDB KeyValPersistence]
            [elephantdb.document KeyValDocument]
            [elephantdb Utils]))
 
@@ -78,36 +77,23 @@
                (test-to-int ?key :> ?intval)
                (c/count ?count)))))
 
-;; TODO: test read specific version using a deserializer
-
-(deftest test-deserializer
-  (let [pairs [[(Utils/serializeString "aaa") (t/barr 1)]]]
-    (t/with-sharded-domain [dpath
-                            {:num-shards 3
-                             :persistence-factory (JavaBerkDB.)}
-                            pairs]
-      (test?<- [["aaa" 1]]
-               [?key ?intval]
-               ((elephant-tap dpath :args {:deserializer (string-deserializer)})
-                ?key ?value)
-               (test-to-int ?value :> ?intval)))))
-
-(t/def-fs-test test-reshard [fs tmpout1 tmpout2]
-  (let [pairs [[(t/barr 0) (t/barr 1)]
-               [(t/barr 1) (t/barr 2)]
-               [(t/barr 2) (t/barr 3)]
-               [(t/barr 3) (t/barr 0)]
-               [(t/barr 4) (t/barr 0)]
-               [(t/barr 5) (t/barr 1)]]]
-    (t/with-sharded-domain [dpath
-                            {:num-shards 3
-                             :persistence-factory (JavaBerkDB.)}
-                            pairs]
-      (reshard! dpath tmpout1 1)
-      (is (= 1 (:num-shards (config/read-domain-spec fs tmpout1))))
-      (t/with-single-service-handler [handler {"domain" tmpout1}]
-        (t/check-domain "domain" handler pairs))
-      (reshard! dpath tmpout2 2)
-      (is (= 1 (:num-shards (config/read-domain-spec fs tmpout1))))
-      (t/with-single-service-handler [handler {"domain" tmpout2}]
-        (t/check-domain "domain" handler pairs)))))
+(deftest test-reshard
+  (t/with-fs-tmp [fs tmpout1 tmpout2]
+    (let [pairs [[(t/barr 0) (t/barr 1)]
+                 [(t/barr 1) (t/barr 2)]
+                 [(t/barr 2) (t/barr 3)]
+                 [(t/barr 3) (t/barr 0)]
+                 [(t/barr 4) (t/barr 0)]
+                 [(t/barr 5) (t/barr 1)]]]
+      (t/with-sharded-domain [dpath
+                              {:num-shards 3
+                               :persistence-factory (JavaBerkDB.)}
+                              pairs]
+        (reshard! dpath tmpout1 1)
+        (is (= 1 (:num-shards (config/read-domain-spec fs tmpout1))))
+        (t/with-single-service-handler [handler {"domain" tmpout1}]
+          (t/check-domain "domain" handler pairs))
+        (reshard! dpath tmpout2 2)
+        (is (= 1 (:num-shards (config/read-domain-spec fs tmpout1))))
+        (t/with-single-service-handler [handler {"domain" tmpout2}]
+          (t/check-domain "domain" handler pairs))))))
