@@ -19,7 +19,7 @@
    :timeout-ms   nil
    :deserializer nil})
 
-(defn mk-clj-updater
+(defn mk-updater
   "Accepts a var OR a vector of a var and arguments. If this occurs,
   the var will be applied to the other arguments before returning a
   function. For example, given:
@@ -29,8 +29,8 @@
 
   Either of these are valid:
 
-  (mk-clj-updater [#'make-adder 1])
-  (mk-clj-updater #'inc)"
+  (mk-updater [#'make-adder 1])
+  (mk-updater #'inc)"
   [updater-spec]
   (ClojureUpdater. (w/fn-spec updater-spec)))
 

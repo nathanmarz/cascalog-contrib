@@ -6,65 +6,63 @@
             [elephantdb.config :as config]
             [cascalog.ops :as c])
   (:import [org.apache.hadoop.io BytesWritable]
-           [elephantdb.persistence JavaBerkDB]
+           [elephantdb.persistence JavaBerkDB KeyValPersistence]
+           [elephantdb.document KeyValDocument]
            [elephantdb Utils]))
 
-(defn mk-writable-pairs [pairs]
-  (map (fn [[k v]]
-         [(BytesWritable. k)
-          (BytesWritable. v)])
-       pairs))
+(defn merge-indexer
+  [^KeyValPersistence lp doc]
+  (let [key     (.key doc)
+        val     (.val doc)
+        new-val (if-let [original (.get lp key)]
+                  (concat original val)
+                  val)]
+    (->> (KeyValDocument. key new-val)
+         (.index lp))))
 
-(defn merge-updater
-  [lp k v]
-  (let [ov (.get lp k)
-        nv (if ov
-             (byte-array (concat (seq ov) (seq v)))
-             v)]
-    (.add lp k nv)))
-
-(t/def-fs-test test-all [fs tmp]
-  (let [data [[(t/barr 0) (t/barr 1)]
-              [(t/barr 1) (t/barr 2 2)]
-              [(t/barr 3) (t/barr 3 3 4)]
-              [(t/barr 1 1) (t/barr 2 2)]
-              [(t/barr 2 2 2) (t/barr 3 3 3)]]
-        data2 [[(t/barr 0) (t/barr 10)]
-               [(t/barr 3) (t/barr 3)]
-               [(t/barr 10) (t/barr 10)]]
-        data3 [[(t/barr 0) (t/barr 1 10)]
-               [(t/barr 1) (t/barr 2 2)]
-               [(t/barr 3) (t/barr 3 3 4 3)]
-               [(t/barr 1 1) (t/barr 2 2)]
-               [(t/barr 2 2 2) (t/barr 3 3 3)]
-               [(t/barr 10) (t/barr 10)]]]
-    (with-tmp-sources [source (mk-writable-pairs data)
-                       source2 (mk-writable-pairs data2)]
-      (?- (elephant-tap tmp :domain-spec {:num-shards 4
-                                          :persistence-factory (JavaBerkDB.)})
-          source)
-      (t/with-single-service-handler [handler {"domain" tmp}]
-        (t/check-domain "domain" handler data))
-      (?- (elephant-tap tmp :args {:updater (mk-clj-updater #'merge-updater)})
-          source2)
-      (t/with-single-service-handler [handler {"domain" tmp}]
-        (t/check-domain "domain" handler data3)))))
+(deftest test-all
+  (t/with-fs-tmp [fs tmp]
+    (let [data [[0        1]
+                [1        [2 2]]
+                [3        [3 3 4]]
+                [[1 1]    [2 2]]
+                [[2 2 2]  [3 3 3]]]
+          data2 [[0       10]
+                 [3       3]
+                 [10      10]]
+          data3 [[0       [1 10]]
+                 [1       [2 2]]
+                 [3       [3 3 4 3]]
+                 [[1 1]   [2 2]]
+                 [[2 2 2] [3 3 3]]
+                 [10      10]]]
+      (with-tmp-sources [source  data
+                         source2 data2]
+        (?- (elephant-tap tmp :domain-spec {:num-shards  4
+                                            :coordinator (JavaBerkDB.)})
+            source)
+        (t/with-single-service-handler [handler {"domain" tmp}]
+          (t/check-domain "domain" handler data))
+        (?- (elephant-tap tmp :args {:indexer (mk-indexer #'merge-indexer)})
+            source2)
+        (t/with-single-service-handler [handler {"domain" tmp}]
+          (t/check-domain "domain" handler data3))))))
 
 (defn test-to-int [bw]
   (int (first (.get bw))))
 
 (deftest test-source
-  (let [pairs [[(t/barr 0) (t/barr 1)]
-               [(t/barr 1) (t/barr 2)]
-               [(t/barr 2) (t/barr 3)]
-               [(t/barr 3) (t/barr 0)]
-               [(t/barr 4) (t/barr 0)]
-               [(t/barr 5) (t/barr 1)]
-               [(t/barr 6) (t/barr 3)]
-               [(t/barr 7) (t/barr 9)]
-               [(t/barr 8) (t/barr 99)]
-               [(t/barr 9) (t/barr 4)]
-               [(t/barr 10) (t/barr 3)]]]
+  (let [pairs [[0 1]
+               [1 2]
+               [2 3]
+               [3 0]
+               [4 0]
+               [5 1]
+               [6 3]
+               [7 9]
+               [8 99]
+               [9 4]
+               [10 3]]]
     (t/with-sharded-domain [dpath
                             {:num-shards 3
                              :persistence-factory (JavaBerkDB.)}
