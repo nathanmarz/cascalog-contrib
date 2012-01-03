@@ -1,26 +1,26 @@
 package elephantdb.cascalog;
 
-import elephantdb.hadoop.ElephantUpdater;
-import elephantdb.persistence.LocalPersistence;
+import elephantdb.index.Indexer;
+import elephantdb.document.Document;
+import elephantdb.persistence.Persistence;
 import java.io.IOException;
 import cascalog.Util;
 import clojure.lang.IFn;
 
-public class ClojureUpdater implements ElephantUpdater {
+public class ClojureIndexer implements Indexer {
     private Object[] spec;
     private transient IFn fn = null;
 
-    public ClojureUpdater(Object[] spec) {
+    public ClojureIndexer(Object[] spec) {
         this.spec = spec;
     }
 
-    public void updateElephant(LocalPersistence lp, byte[] newKey,
-                               byte[] newVal) throws IOException {
-        if(this.fn==null) {
+    public void index(Persistence lp, Document doc) throws IOException {
+        if(this.fn==null)
             this.fn = Util.bootFn(this.spec);
-        }
+        
         try {
-            this.fn.invoke(lp, newKey, newVal);
+            this.fn.invoke(lp, doc);
         } catch(IOException ioe) {
             throw ioe;
         } catch(Exception e) {

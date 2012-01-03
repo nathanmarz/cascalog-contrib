@@ -3,7 +3,7 @@
   (:import [cascalog.ops IdentityBuffer]
            [elephantdb.hadoop Common]
            [elephantdb Utils]
-           [elephantdb.persistence LocalPersistenceFactory]
+           [elephantdb.persistence Coordinator]
            [elephantdb.cascading ElephantDBTap ElephantDBTap$Args]
            [java.util ArrayList HashMap]
            [org.apache.hadoop.io BytesWritable]))
@@ -16,13 +16,13 @@
   (when l (ArrayList. l)))
 
 (defn convert-clj-args
-  [a {:keys [persistence-options tmp-dirs updater timeout-ms deserializer version]}]
+  [a {:keys [persistence-options tmp-dirs indexer timeout-ms version]}]
   (let [ret (ElephantDBTap$Args.)]
     (set! (.persistenceOptions ret) (HashMap. persistence-options))
     (set! (.tmpDirs ret)            (serializable-list tmp-dirs))
-    (set! (.updater ret) updater)
-    (when timeout-ms (set! (.timeoutMs ret) timeout-ms))
-    (set! (.deserializer ret) deserializer)
+    (set! (.indexer ret) indexer)
+    (when timeout-ms
+      (set! (.timeoutMs ret) timeout-ms))
     (set! (.version ret) version)
     ret))
 
@@ -31,13 +31,13 @@
                   num-shards))
 
 ;; TODO: Replace this serialization method with the kryo ObjectBuffer.
-(defmapop [mk-sortable-key [^LocalPersistenceFactory fact]]
+(defmapop [mk-sortable-key [^Coordinator coordinator]]
   "TODO: We can't just use Common/serializeElephantVal; we need to use
   a serializer from the LocalPersistenceFactory."
   [k]
   (BytesWritable.
    (.getSortableKey
-    (.getKeySorter fact)
+    (.getKeySorter coordinator)
     (Common/serializeElephantVal k))))
 
 (defn elephant<-
