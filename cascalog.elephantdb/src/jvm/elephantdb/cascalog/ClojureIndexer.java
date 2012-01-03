@@ -1,11 +1,12 @@
 package elephantdb.cascalog;
 
-import elephantdb.index.Indexer;
-import elephantdb.document.Document;
-import elephantdb.persistence.Persistence;
-import java.io.IOException;
 import cascalog.Util;
 import clojure.lang.IFn;
+import elephantdb.document.Document;
+import elephantdb.index.Indexer;
+import elephantdb.persistence.Persistence;
+
+import java.io.IOException;
 
 public class ClojureIndexer implements Indexer {
     private Object[] spec;
@@ -21,8 +22,6 @@ public class ClojureIndexer implements Indexer {
         
         try {
             this.fn.invoke(lp, doc);
-        } catch(IOException ioe) {
-            throw ioe;
         } catch(Exception e) {
             throw new RuntimeException(e);
         }

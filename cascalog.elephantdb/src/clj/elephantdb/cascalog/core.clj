@@ -1,23 +1,12 @@
 (ns elephantdb.cascalog.core
-  (:use cascalog api
-        elephantdb.cascalog
-        elephantdb.impl)
+  (:use cascalog.api
+        [elephantdb.cascalog impl conf])
   (:require [cascalog.workflow :as w]
-            [elephantdb.config :as c])
+            [elephantdb.common.config :as c])
   (:import [elephantdb Utils]
-           [elephantdb.cascalog ClojureUpdater]
+           [elephantdb.cascalog ClojureIndexer]
            [elephantdb.cascading ElephantDBTap]
-           [elephantdb.hadoop ReplaceUpdater Common
-            LongDeserializer StringDeserializer IntDeserializer]
            [org.apache.hadoop.conf Configuration]))
-
-(def default-args
-  {:persistence-options {}
-   :updater      (ReplaceUpdater.)
-   :version      nil
-   :tmp-dirs     nil
-   :timeout-ms   nil
-   :deserializer nil})
 
 (defn mk-updater
   "Accepts a var OR a vector of a var and arguments. If this occurs,
@@ -32,34 +21,19 @@
   (mk-updater [#'make-adder 1])
   (mk-updater #'inc)"
   [updater-spec]
-  (ClojureUpdater. (w/fn-spec updater-spec)))
-
-;; TODO: Replace each of these with deserializers
-(defn long-deserializer
-  "Deserializes long byte arrays."
-  []
-  (LongDeserializer.))
-
-(defn int-deserializer
-  "Deserializes long byte arrays."
-  []
-  (IntDeserializer.))
-
-(defn string-deserializer
-  "Deserializes string byte arrays."
-  []
-  (StringDeserializer.))
+  (ClojureIndexer. (w/fn-spec updater-spec)))
 
 (defn elephant-tap
-  "Note that when sourcing, you currently HAVE to specify a
-  deserializer (since you're getting a byte array back)"
+  "Returns a tap that can be used to source and sink key-value pairs
+  to ElephantDB."
   [root & {:keys [args domain-spec]}]
-  (let [args (convert-clj-args (merge default-args args))
-        domain-spec (when domain-spec (c/convert-clj-domain-spec domain-spec))
-        etap (ElephantDBTap. root domain-spec args)]
-    (cascalog-tap etap
+  (let [args    (convert-clj-args (merge default-args args))
+        spec    (when domain-spec
+                  (c/convert-clj-domain-spec domain-spec))
+        edb-tap (ElephantDBTap. root spec args)]
+    (cascalog-tap edb-tap
                   (fn [pairs]
-                    [etap (elephant<- etap pairs)]))))
+                    [edb-tap (elephant<- edb-tap pairs)]))))
 
 (defn reshard!
   [source-dir target-dir numshards]
