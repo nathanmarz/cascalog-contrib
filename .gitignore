@@ -1,8 +1,3 @@
-NOTES
-CHILD
-CHILDMAKER
-NANNY
-_deps
 build
 target
 out
@@ -14,9 +9,6 @@ syntax: glob
 *.class
 *.jar
 *~
-*.bak
-*.off
-*.old
 .DS_Store
 *.#*
 *#*
@@ -28,3 +20,7 @@ syntax: glob
 .cake/
 .lein-failures
 .lein-deps-sum
+.idea
+*.ipr
+*.iml
+*.iws
