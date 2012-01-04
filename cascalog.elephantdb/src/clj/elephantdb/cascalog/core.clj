@@ -8,7 +8,7 @@
            [elephantdb.cascading ElephantDBTap]
            [org.apache.hadoop.conf Configuration]))
 
-(defn mk-updater
+(defn mk-indexer
   "Accepts a var OR a vector of a var and arguments. If this occurs,
   the var will be applied to the other arguments before returning a
   function. For example, given:
@@ -18,10 +18,37 @@
 
   Either of these are valid:
 
-  (mk-updater [#'make-adder 1])
-  (mk-updater #'inc)"
+  (mk-indexer [#'make-adder 1])
+  (mk-indexer #'inc)
+
+  The supplied function will receive
+
+     [KeyValPersistence, Document]
+
+  as arguments."
   [updater-spec]
   (ClojureIndexer. (w/fn-spec updater-spec)))
+
+(defn kv-indexer
+  "Accepts a var OR a vector of a var and arguments. If this occurs,
+  the var will be applied to the other arguments before returning a
+  function. For example, given:
+
+  (defn make-adder [x]
+      (fn [y] (+ x y)))
+
+  Either of these are valid:
+
+  (kv-indexer [#'make-adder 1])
+  (kv-indexer #'inc)
+
+  The supplied function will receive
+
+     [KeyValPersistence, key, value]
+
+  as arguments."
+  [updater-spec]
+  (KeyValIndexer. (w/fn-spec updater-spec)))
 
 (defn elephant-tap
   "Returns a tap that can be used to source and sink key-value pairs

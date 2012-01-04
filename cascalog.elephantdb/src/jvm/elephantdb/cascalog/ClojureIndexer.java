@@ -9,8 +9,8 @@ import elephantdb.persistence.Persistence;
 import java.io.IOException;
 
 public class ClojureIndexer implements Indexer {
-    private Object[] spec;
-    private transient IFn fn = null;
+    Object[] spec;
+    transient IFn fn = null;
 
     public ClojureIndexer(Object[] spec) {
         this.spec = spec;
