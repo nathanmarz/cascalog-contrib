@@ -3,7 +3,7 @@
   :java-source-path "src/jvm"
   :javac-options {:debug "true" :fork "true"}
   :dependencies [[org.clojure/clojure "1.3.0"]
-                 [cascalog "1.8.5-SNAPSHOT"]
+                 [cascalog "1.8.5"]
                  [elephantdb/elephantdb-cascading "0.2.0"]]
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
                      [midje-cascalog "0.3.0"]]
