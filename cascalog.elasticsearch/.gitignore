@@ -1,0 +1,11 @@
+pom.xml
+*jar
+/lib/
+/classes/
+.lein-failures
+.lein-deps-sum
+*.ipr
+*.iws
+docs/
+.DS_Store
+target/

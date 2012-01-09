@@ -1,7 +1,8 @@
 (ns cascalog.checkpoint
   "Alpha!"
   (:require [hadoop-util.core :as h]
-            [cascalog.util :as u])
+            [jackknife.core :as u]
+            [jackknife.seq :as seq])
   (:import [java.util Collection]
            [org.apache.log4j Logger]
            [java.util.concurrent Semaphore]
@@ -36,9 +37,9 @@
                      :last (if last-node [last-node] [])
                      :all  (keys @graph-atom)
                      (when deps
-                       (u/collectify deps)))
+                       (seq/collectify deps)))
         tmp-dirs   (when tmp-dirs
-                     (u/collectify tmp-dirs))]
+                     (seq/collectify tmp-dirs))]
     (when (contains? @graph-atom name)
       (u/throw-illegal (str name " already exists in workflow")))
     (swap! graph-atom assoc name (struct WorkflowNode tmp-dirs afn deps))
@@ -119,7 +120,7 @@
                       (mapcat (fn [[_ [kwd-form]]]
                                 (when-let [dirseq (:tmp-dirs
                                                    (apply hash-map kwd-form))]
-                                  (u/collectify dirseq)))))]
+                                  (seq/collectify dirseq)))))]
     (mapcat (fn [sym]
               (let [s (str sym)]
                 [sym `(str ~checkpoint-dir "/data/" ~s)]))

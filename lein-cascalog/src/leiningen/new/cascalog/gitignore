@@ -1,14 +1,17 @@
+# use glob syntax.
+syntax: glob
 build
 target
 out
 lib
 pom.xml
-# use glob syntax.
-syntax: glob
 *.ser
 *.class
 *.jar
 *~
+*.bak
+*.off
+*.old
 .DS_Store
 *.#*
 *#*
@@ -20,7 +23,4 @@ syntax: glob
 .cake/
 .lein-failures
 .lein-deps-sum
-.idea
-*.ipr
-*.iml
-*.iws
+autodoc/
