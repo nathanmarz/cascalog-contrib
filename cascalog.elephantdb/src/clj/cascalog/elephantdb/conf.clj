@@ -1,4 +1,4 @@
-(ns elephantdb.cascalog.conf
+(ns cascalog.elephantdb.conf
   (:import [elephantdb.cascading ElephantBaseTap$Args]
            [java.util ArrayList HashMap]))
 

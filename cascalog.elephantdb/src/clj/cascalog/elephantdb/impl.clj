@@ -1,4 +1,4 @@
-(ns elephantdb.cascalog.impl
+(ns cascalog.elephantdb.impl
   (:use cascalog.api)
   (:import [cascalog.ops IdentityBuffer]
            [elephantdb Utils]

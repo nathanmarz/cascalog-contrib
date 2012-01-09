@@ -1,6 +1,6 @@
-(ns elephantdb.cascalog.core
+(ns cascalog.elephantdb.core
   (:use cascalog.api
-        [elephantdb.cascalog impl conf])
+        [cascalog.elephantdb impl conf])
   (:require [cascalog.workflow :as w]
             [elephantdb.common.config :as c])
   (:import [elephantdb Utils]

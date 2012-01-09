@@ -1,4 +1,4 @@
-package elephantdb.cascalog;
+package cascalog.elephantdb;
 
 import cascalog.Util;
 import clojure.lang.IFn;
