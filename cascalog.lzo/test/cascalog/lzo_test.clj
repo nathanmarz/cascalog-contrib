@@ -3,7 +3,7 @@
         [midje sweet cascalog])
   (:require [cascalog.io :as io]))
 
-(fact "Test round tripping through the "
+(fact "Test round tripping."
   (io/with-fs-tmp [_ tmp]
     "Set up the job..."
     (?- (hfs-lzo-textline tmp) [["a line of text!"]])
