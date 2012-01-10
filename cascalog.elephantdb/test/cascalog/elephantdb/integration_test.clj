@@ -1,8 +1,8 @@
-(ns elephantdb.cascalog.integration-test
+(ns cascalog.elephantdb.integration-test
   (:use clojure.test
-        elephantdb.cascalog.core
+        cascalog.elephantdb.core
         [cascalog api testing])
-  (:require [elephantdb.common.testing :as t]
+  (:require [elephantdb.test.common :as t]
             [elephantdb.common.config :as config]
             [cascalog.ops :as c])
   (:import [elephantdb.persistence JavaBerkDB KeyValPersistence]
