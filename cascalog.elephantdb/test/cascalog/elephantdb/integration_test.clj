@@ -1,8 +1,9 @@
 (ns elephantdb.cascalog.integration-test
   (:use clojure.test
-        elephantdb.cascalog.core
-        [cascalog api testing])
-  (:require [elephantdb.common.testing :as t]
+        cascalog.elephantdb.core
+        [cascalog api testing]
+        [midje sweet cascalog])
+  (:require [elephantdb.test.common :as t]
             [elephantdb.common.config :as config]
             [cascalog.ops :as c])
   (:import [elephantdb.persistence JavaBerkDB KeyValPersistence]
@@ -19,7 +20,7 @@
     (->> (KeyValDocument. key new-val)
          (.index lp))))
 
-(deftest test-all
+(fact "test all!"
   (t/with-fs-tmp [fs tmp]
     (let [data [[0        1]
                 [1        [2 2]]

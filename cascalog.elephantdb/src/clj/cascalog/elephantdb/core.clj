@@ -3,7 +3,7 @@
         [cascalog.elephantdb impl conf])
   (:require [cascalog.workflow :as w]
             [elephantdb.common.config :as c])
-  (:import [cascalog.elephantdb ClojureIndexer]
+  (:import [cascalog.elephantdb ClojureIndexer KeyValIndexer]
            [elephantdb Utils]
            [elephantdb.cascading ElephantDBTap]
            [org.apache.hadoop.conf Configuration]))
