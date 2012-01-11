@@ -2,13 +2,20 @@
   (:use clojure.test
         cascalog.elephantdb.core
         [cascalog api testing]
-        [midje sweet cascalog])
+        [midje sweet cascalog]
+        [hadoop-util.test :only (with-fs-tmp)])
   (:require [elephantdb.test.common :as t]
             [elephantdb.common.config :as config]
             [cascalog.ops :as c])
   (:import [elephantdb.persistence JavaBerkDB KeyValPersistence]
+           [elephantdb.partition HashModScheme]
            [elephantdb.document KeyValDocument]
            [elephantdb Utils]))
+
+(defn mk-spec [num-shards]
+  {:num-shards  num-shards
+   :coordinator (JavaBerkDB.)
+   :shard-scheme (HashModScheme.)})
 
 (defn merge-indexer
   [^KeyValPersistence lp doc]
@@ -21,7 +28,7 @@
          (.index lp))))
 
 (fact "test all!"
-  (t/with-fs-tmp [fs tmp]
+  (with-fs-tmp [fs tmp]
     (let [data [[0        1]
                 [1        [2 2]]
                 [3        [3 3 4]]
@@ -38,8 +45,7 @@
                  [10      10]]]
       (with-tmp-sources [source  data
                          source2 data2]
-        (?- (elephant-tap tmp :domain-spec {:num-shards  4
-                                            :coordinator (JavaBerkDB.)})
+        (?- (elephant-tap tmp :domain-spec (mk-spec 4))
             source)
         (t/with-single-service-handler [handler {"domain" tmp}]
           (t/check-domain "domain" handler data))
@@ -64,8 +70,7 @@
                [9 4]
                [10 3]]]
     (t/with-sharded-domain [dpath
-                            {:num-shards 3
-                             :persistence-factory (JavaBerkDB.)}
+                            (mk-spec 3)
                             pairs]
       (test?<- [[1 2] [2 1] [3 3] [0 2] [9 1] [99 1] [4 1]]
                [?intval ?count]
@@ -78,8 +83,8 @@
                (test-to-int ?key :> ?intval)
                (c/count ?count)))))
 
-(deftest test-reshard
-  (t/with-fs-tmp [fs tmpout1 tmpout2]
+(fact "test-reshard"
+  (with-fs-tmp [fs tmpout1 tmpout2]
     (let [pairs [[(t/barr 0) (t/barr 1)]
                  [(t/barr 1) (t/barr 2)]
                  [(t/barr 2) (t/barr 3)]
@@ -87,14 +92,13 @@
                  [(t/barr 4) (t/barr 0)]
                  [(t/barr 5) (t/barr 1)]]]
       (t/with-sharded-domain [dpath
-                              {:num-shards 3
-                               :persistence-factory (JavaBerkDB.)}
+                              (mk-spec 3)
                               pairs]
         (reshard! dpath tmpout1 1)
-        (is (= 1 (:num-shards (config/read-domain-spec fs tmpout1))))
+        (:num-shards (config/read-domain-spec fs tmpout1)) => 1
         (t/with-single-service-handler [handler {"domain" tmpout1}]
           (t/check-domain "domain" handler pairs))
         (reshard! dpath tmpout2 2)
-        (is (= 1 (:num-shards (config/read-domain-spec fs tmpout1))))
+        (:num-shards (config/read-domain-spec fs tmpout1)) => 1
         (t/with-single-service-handler [handler {"domain" tmpout2}]
           (t/check-domain "domain" handler pairs))))))
