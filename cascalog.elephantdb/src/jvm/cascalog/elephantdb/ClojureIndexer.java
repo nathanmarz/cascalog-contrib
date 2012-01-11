@@ -2,7 +2,6 @@ package cascalog.elephantdb;
 
 import cascalog.Util;
 import clojure.lang.IFn;
-import elephantdb.document.Document;
 import elephantdb.index.Indexer;
 import elephantdb.persistence.Persistence;
 
@@ -16,7 +15,7 @@ public class ClojureIndexer implements Indexer {
         this.spec = spec;
     }
 
-    public void index(Persistence lp, Document doc) throws IOException {
+    public void index(Persistence lp, Object doc) throws IOException {
         if(this.fn==null)
             this.fn = Util.bootFn(this.spec);
         
