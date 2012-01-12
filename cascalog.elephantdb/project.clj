@@ -9,6 +9,6 @@
   :javac-options {:debug "true" :fork "true"}
   :dependencies ~(conj shared '[org.clojure/clojure "1.3.0"])
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
-                     [midje-cascalog "0.3.0"]]
+                     [midje-cascalog "0.3.1"]]
   :multi-deps {"1.2" ~(conj shared '[org.clojure/clojure "1.2.1"])
                "1.4" ~(conj shared '[org.clojure/clojure "1.4.0-alpha3"])})
