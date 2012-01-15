@@ -3,12 +3,13 @@
         [cascalog.elephantdb impl conf])
   (:require [cascalog.workflow :as w]
             [elephantdb.common.config :as c])
-  (:import [cascalog.elephantdb ClojureIndexer KeyValIndexer]
+  (:import [elephantdb.index Indexer]
+           [cascalog.elephantdb ClojureIndexer]
            [elephantdb Utils]
            [elephantdb.cascading ElephantDBTap]
            [org.apache.hadoop.conf Configuration]))
 
-(defn mk-indexer
+(defmulti mk-indexer
   "Accepts a var OR a vector of a var and arguments. If this occurs,
   the var will be applied to the other arguments before returning a
   function. For example, given:
@@ -26,41 +27,29 @@
      [KeyValPersistence, Document]
 
   as arguments."
-  [updater-spec]
-  (ClojureIndexer. (w/fn-spec updater-spec)))
+  type)
 
-(defn kv-indexer
-  "Accepts a var OR a vector of a var and arguments. If this occurs,
-  the var will be applied to the other arguments before returning a
-  function. For example, given:
+(defmethod mk-indexer nil
+  [_] nil)
 
-  (defn make-adder [x]
-      (fn [y] (+ x y)))
+(defmethod mk-indexer Indexer
+  [indexer] indexer)
 
-  Either of these are valid:
-
-  (kv-indexer [#'make-adder 1])
-  (kv-indexer #'inc)
-
-  The supplied function will receive
-
-     [KeyValPersistence, key, value]
-
-  as arguments."
-  [updater-spec]
-  (KeyValIndexer. (w/fn-spec updater-spec)))
+(defmethod mk-indexer :default
+  [spec]
+  (ClojureIndexer. (w/fn-spec spec)))
 
 (defn elephant-tap
-  "Returns a tap that can be used to source and sink key-value pairs
-  to ElephantDB."
-  [root & {:keys [args domain-spec]}]
-  (let [args    (convert-clj-args (merge default-args args))
-        spec    (when domain-spec
-                  (c/convert-clj-domain-spec domain-spec))
-        edb-tap (ElephantDBTap. root spec args)]
-    (cascalog-tap edb-tap
+  [root-path & {:keys [spec indexer] :as args}]
+  (let [args (->  args
+                  (merge {:indexer (mk-indexer indexer)})
+                  (convert-keyval-args))
+        spec (when spec
+               (c/convert-clj-domain-spec spec))
+        tap  (ElephantDBTap. root-path spec args)]
+    (cascalog-tap tap
                   (fn [pairs]
-                    [edb-tap (elephant<- edb-tap pairs)]))))
+                    [tap (elephant<- tap pairs)]))))
 
 (defn reshard!
   [source-dir target-dir numshards]

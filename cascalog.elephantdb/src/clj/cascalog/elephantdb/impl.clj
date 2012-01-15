@@ -12,7 +12,6 @@
   [shard-key]
   (.shardIndex scheme shard-key shard-count))
 
-;; TODO: Replace this serialization method with the kryo ObjectBuffer.
 (defmapop [mk-sortable-key [^Serializer serializer]]
   [shard-key]
   (BytesWritable.
