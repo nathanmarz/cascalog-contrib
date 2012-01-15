@@ -1,16 +1,16 @@
-(ns elephantdb.cascalog.integration-test
-  (:use clojure.test
+(ns cascalog.elephantdb.keyval-test
+  (:use cascalog.elephantdb.keyval
         cascalog.elephantdb.core
-        [cascalog api testing]
-        [midje sweet cascalog]
-        [hadoop-util.test :only (with-fs-tmp)])
-  (:require [elephantdb.test.common :as t]
+        cascalog.api
+        ;; cascalog.testing ;; do we need this?
+        [midje sweet cascalog])
+  (:require [hadoop-util.test :as test]
+            [elephantdb.test.common :as t]
             [elephantdb.common.config :as config]
             [cascalog.ops :as c])
   (:import [elephantdb.persistence JavaBerkDB KeyValPersistence]
            [elephantdb.partition HashModScheme]
-           [elephantdb.document KeyValDocument]
-           [elephantdb Utils]))
+           [elephantdb.document KeyValDocument]))
 
 (defn mk-spec [num-shards]
   {:num-shards  num-shards
@@ -28,7 +28,7 @@
          (.index lp))))
 
 (fact "test all!"
-  (with-fs-tmp [fs tmp]
+  (test/with-fs-tmp [fs tmp]
     (let [data [[0        1]
                 [1        [2 2]]
                 [3        [3 3 4]]
@@ -57,7 +57,7 @@
 (defn test-to-int [bw]
   (int (first (.get bw))))
 
-(deftest test-source
+(fact "test-source"
   (let [pairs [[0 1]
                [1 2]
                [2 3]
@@ -84,7 +84,7 @@
                (c/count ?count)))))
 
 (fact "test-reshard"
-  (with-fs-tmp [fs tmpout1 tmpout2]
+  (test/with-fs-tmp [fs tmpout1 tmpout2]
     (let [pairs [[(t/barr 0) (t/barr 1)]
                  [(t/barr 1) (t/barr 2)]
                  [(t/barr 2) (t/barr 3)]
