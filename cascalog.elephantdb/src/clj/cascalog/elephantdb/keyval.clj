@@ -1,9 +1,41 @@
 (ns cascalog.elephantdb.keyval
+  (:use cascalog.api)
   (:require [cascalog.workflow :as w]
             [cascalog.elephantdb.core :as core]
             [elephantdb.common.config :as c])
   (:import [elephantdb.index Indexer]
-           [cascalog.elephantdb KeyValIndexer]))
+           [elephantdb.cascading KeyValGateway]
+           [cascalog.elephantdb KeyValIndexer]
+           [cascalog.ops IdentityBuffer]
+           [org.apache.hadoop.conf Configuration]
+           [elephantdb Utils]
+           [elephantdb.partition ShardingScheme]
+           [elephantdb.serialize Serializer]
+           [org.apache.hadoop.io BytesWritable]))
+
+(defmapop [shard [^ShardingScheme scheme shard-count]]
+  "Returns the shard to which the supplied shard-key should be
+  routed."
+  [shard-key]
+  (.shardIndex scheme shard-key shard-count))
+
+(defmapop [mk-sortable-key [^Serializer serializer]]
+  [shard-key]
+  (BytesWritable.
+   (.serialize serializer shard-key)))
+
+(defn elephant<-
+  [elephant-tap kv-src]
+  (let [spec        (.getSpec elephant-tap)
+        scheme      (.getShardScheme spec)
+        shard-count (.getNumShards spec)
+        serializer  (Utils/makeSerializer spec)]
+    (<- [!shard !key !value]
+        (kv-src !keyraw !valueraw)
+        (shard [scheme shard-count] !keyraw :> !shard)
+        (mk-sortable-key [serializer] !keyraw :> !sort-key)
+        (:sort !sort-key)
+        ((IdentityBuffer.) !keyraw !valueraw :> !key !value))))
 
 (defmulti kv-indexer
   "Accepts a var OR a vector of a var and arguments. If this occurs,
@@ -25,30 +57,35 @@
   as arguments."
   type)
 
-(defmethod kv-indexer nil
-  [_] nil)
-
 (defmethod kv-indexer Indexer
   [indexer] indexer)
 
 (defmethod kv-indexer :default
   [spec]
-  (KeyValIndexer. (w/fn-spec spec)))
-
-(defn convert-keyval-args [conf-map]
-  (convert-args
-   (merge-with #(or %1 %2)
-               {:gateway (KeyValGateway.)}
-               conf-map)))
+  (when spec
+    (KeyValIndexer. (w/fn-spec spec))))
 
 (defn keyval-tap
   "Returns a tap that can be used to source and sink key-value pairs
   to ElephantDB."
   [root-path & {:keys [indexer] :as args}]
-  (let [args (merge-with #(or %1 %2)
-                         {:gateway (KeyValGateway.)}
-                         args
-                         {:indexer (kv-indexer indexer)})]
+  (let [args (merge {:gateway (KeyValGateway.)
+                     :source-fields ["key" "value"]}
+                    args
+                    {:sink-fn elephant<-
+                     :indexer (kv-indexer indexer)})]
+    (prn args)
     (apply core/elephant-tap
            root-path
            (apply concat args))))
+
+(defn reshard!
+  "Accepts two target paths and a new shard count and re-shards the
+  domain at source-dir into target-dir. (To re-shard a domain into
+  itself, pass the same path in for source and target.)"
+  [source-dir target-dir shard-count]
+  (let [fs (Utils/getFS source-dir (Configuration.))
+        spec (c/read-domain-spec fs source-dir)
+        new-spec (assoc spec :num-shards shard-count)]
+    (?- (keyval-tap target-dir :spec new-spec)
+        (keyval-tap source-dir))))

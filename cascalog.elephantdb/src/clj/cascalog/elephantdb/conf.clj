@@ -1,15 +1,18 @@
 (ns cascalog.elephantdb.conf
-  (:import [elephantdb.cascading ElephantBaseTap$Args]
+  (:require [cascalog.workflow :as w])
+  (:import [elephantdb.cascading ElephantDBTap$Args]
            [elephantdb.cascading KeyValGateway]
            [java.util ArrayList HashMap]))
 
-(defn- mk-list [l]
-  (when l (ArrayList. l)))
-
 (defn convert-args
-  [{:keys [incremental tmp-dirs indexer timeout-ms version gateway]
+  [{:keys [incremental tmp-dirs indexer source-fields
+           timeout-ms version gateway]
     :or {incremental true}}]
-  (let [ret  (ElephantBaseTap$Args.)]
+  (let [mk-list (fn [xs] (when xs (ArrayList. xs)))
+        ret      (ElephantDBTap$Args.)]
+    (set! (.incremental ret) incremental)
+    (when source-fields
+      (set! (.sourceFields ret) (w/fields source-fields)))
     (set! (.tmpDirs ret) (mk-list tmp-dirs))
     (when gateway
       (set! (.gateway ret) gateway))

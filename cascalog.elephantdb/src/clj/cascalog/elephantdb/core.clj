@@ -29,32 +29,24 @@
   as arguments."
   type)
 
-(defmethod mk-indexer nil
-  [_] nil)
-
 (defmethod mk-indexer Indexer
   [indexer] indexer)
 
 (defmethod mk-indexer :default
   [spec]
-  (ClojureIndexer. (w/fn-spec spec)))
+  (when spec
+    (ClojureIndexer. (w/fn-spec spec))))
 
 (defn elephant-tap
-  [root-path & {:keys [spec indexer] :as args}]
+  [root-path & {:keys [spec indexer sink-fn] :as args}]
   (let [args (->  args
                   (merge {:indexer (mk-indexer indexer)})
-                  (convert-keyval-args))
+                  (convert-args))
         spec (when spec
                (c/convert-clj-domain-spec spec))
         tap  (ElephantDBTap. root-path spec args)]
     (cascalog-tap tap
-                  (fn [pairs]
-                    [tap (elephant<- tap pairs)]))))
-
-(defn reshard!
-  [source-dir target-dir numshards]
-  (let [fs (Utils/getFS source-dir (Configuration.))
-        spec (c/read-domain-spec fs source-dir)
-        new-spec (assoc spec :num-shards numshards)]
-    (?- (elephant-tap target-dir :domain-spec new-spec)
-        (elephant-tap source-dir))))
+                  (if sink-fn
+                    (fn [tuple-src]
+                      [tap (sink-fn tap tuple-src)])
+                    tap))))
