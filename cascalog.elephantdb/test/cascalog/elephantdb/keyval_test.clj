@@ -80,24 +80,24 @@
         (?- sink data2)
         sink => (produces data2)))))
 
-(deftest incremental-true-test
-  (facts "Incremental defaults to `true`, bringing an updater into
+(facts
+  "Incremental defaults to `true`, bringing an updater into
   play. For a key-value store, the default behavior on an incremental
   update is for new kv-pairs to knock out existing kv-pairs."
-    (with-kv-tap [sink 2]
-      (let [data  (vec {0 "zero"
-                        1 "one"
-                        2 "two"})
-            data2 (vec {0 "ZERO!"
-                        3 "THREE!"})]
-        (fact "Populating the sink with `data` produces `data`."
-          (?- sink data)
-          sink => (produces data))
+  (with-kv-tap [sink 2]
+    (let [data  (vec {0 "zero"
+                      1 "one"
+                      2 "two"})
+          data2 (vec {0 "ZERO!"
+                      3 "THREE!"})]
+      (fact "Populating the sink with `data` produces `data`."
+        (?- sink data)
+        sink => (produces data))
 
-        (fact "Sinking `data2` on top of `data` produces the same set
+      (fact "Sinking `data2` on top of `data` produces the same set
         of tuples as merging two clojure maps"
-          (?- sink data2)
-          sink => (produces (vec-merge data data2)))))))
+        (?- sink data2)
+        sink => (produces (vec-merge data data2))))))
 
 (tabular
  (fact
