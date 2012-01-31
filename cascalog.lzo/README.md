@@ -23,7 +23,7 @@ If you're on Lion, you'll have to re-install your java development headers [here
 
 ### Building Hadoop-Lzo
 
-git clone https://github.com/kevinweil/hadoop-lzo.git
+ygit clone https://github.com/kevinweil/hadoop-lzo.git
 cd hadoop-lzo
 git checkout -b lion 4c5a2270863e0d906e5c3c7cd7a57a7f14436759
 

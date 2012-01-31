@@ -74,7 +74,6 @@
                     args
                     {:sink-fn elephant<-
                      :indexer (kv-indexer indexer)})]
-    (prn args)
     (apply core/elephant-tap
            root-path
            (apply concat args))))
