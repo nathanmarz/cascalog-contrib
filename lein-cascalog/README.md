@@ -4,7 +4,7 @@ A Leiningen plugin for interacting with the [Cascalog](https://github.com/nathan
 
 ## Usage
 
-Run the following commands to install `cascalog-contrib-template` and create a new Cascalog project:
+Run the following commands to install `lein-cascalog` and create a new Cascalog project:
 
     lein plugin install lein-newnew 0.1.2
     lein plugin install lein-cascalog 0.1.0
