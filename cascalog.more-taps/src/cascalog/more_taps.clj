@@ -6,7 +6,7 @@
   (:import [cascading.scheme TextDelimited]
            [cascading.tuple Fields]))
 
-(defn delimited
+(defn- delimited
   [field-seq delim & {:keys [classes skip-header?]}]
   (let [skip-header? (boolean skip-header?)
         field-seq    (w/fields field-seq)
