@@ -1,6 +1,6 @@
 (ns cascalog.elephantdb.core
   (:use cascalog.api
-        [cascalog.elephantdb impl conf])
+        [cascalog.elephantdb conf])
   (:require [cascalog.workflow :as w]
             [elephantdb.common.config :as c])
   (:import [elephantdb.index Indexer]

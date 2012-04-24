@@ -2,7 +2,7 @@
   (:require [cascalog.workflow :as w])
   (:import [elephantdb.cascading ElephantDBTap$Args]
            [elephantdb.cascading KeyValGateway]
-           [java.util ArrayList HashMap]))
+           [java.util ArrayList]))
 
 (defn convert-args
   [{:keys [incremental tmp-dirs indexer source-fields
