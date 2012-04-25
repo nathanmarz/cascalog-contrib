@@ -4,18 +4,14 @@ Additional taps for Cascalog.
 
 ## Available Taps
 
-- [delimited files](https://github.com/Quantisan/cascalog-contrib/blob/master/cascalog.more-taps/src/cascalog/more_taps.clj#L20)
+- delimited files
+- writable sequence files
+- protocol buffer files
 
 ## Usage
 
 Add the following to project.clj:
 
 ```
-[cascalog-more-taps "0.1.0"]
+[cascalog-more-taps "0.2.0"]
 ```
-
-## License
-
-Copyright (C) 2012 Paul Lam
-
-Distributed under the Eclipse Public License, the same as Clojure.
