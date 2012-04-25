@@ -1,4 +1,4 @@
-(defproject cascalog-more-taps "0.2.0-SNAPSHOT"
+(defproject cascalog-more-taps "0.2.0"
   :description "Taps for Cascalog"
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [cascalog "1.8.7"]
