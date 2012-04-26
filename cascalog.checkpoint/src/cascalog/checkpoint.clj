@@ -1,6 +1,8 @@
 (ns cascalog.checkpoint
   "Alpha!"
+  (:use [cascalog.api :only [with-job-conf]])
   (:require [hadoop-util.core :as h]
+            [cascalog.conf :as conf]
             [jackknife.core :as u]
             [jackknife.seq :as seq])
   (:import [java.util Collection]
@@ -48,21 +50,23 @@
 
 (defn- mk-runner
   [fs token node status-atom sem log]
-  (Thread.
-   (fn []
-     (try (if-not (.exists fs (h/path token))
-            (do (doseq [t (::tmp-dirs node)]
-                  (h/delete fs t true))
-                ((::fn node))
-                (when-not (.createNewFile fs (h/path token))
-                  (u/throw-runtime
-                   (str "Unable to make checkpoint token " token))))
-            (.info log (str "Skipping " token "...")))
-          (reset! status-atom :successful)
-          (catch Throwable t
-            (.error log "Component failed" t)
-            (reset! status-atom :failed))
-          (finally (.release sem))))))
+  (let [config conf/*JOB-CONF*]
+    (Thread.
+     (fn []
+       (with-job-conf config
+         (try (if-not (.exists fs (h/path token))
+                (do (doseq [t (::tmp-dirs node)]
+                      (h/delete fs t true))
+                    ((::fn node))
+                    (when-not (.createNewFile fs (h/path token))
+                      (u/throw-runtime
+                       (str "Unable to make checkpoint token " token))))
+                (.info log (str "Skipping " token "...")))
+              (reset! status-atom :successful)
+              (catch Throwable t
+                (.error log "Component failed" t)
+                (reset! status-atom :failed))
+              (finally (.release sem))))))))
 
 (defn- fail-workflow!
   [log nodes-map]
