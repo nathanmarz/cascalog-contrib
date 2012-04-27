@@ -2,7 +2,7 @@
   :description "Lzo compression taps for Cascalog."
   :repositories {"bird" "https://raw.github.com/kevinweil/elephant-bird/master/repo"}
   :dependencies [[cascalog "1.9.0-wip10"]
-                 [com.twitter/elephant-bird "2.2.2"]
+                 [cascalog/elephant-bird "2.2.3-SNAPSHOT"]
                  [hadoop-lzo "0.4.15"]]
   :exclusions [yamlbeans
                com.google/protobuf-java
