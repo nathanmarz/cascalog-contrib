@@ -15,7 +15,7 @@
 (defn delimited [field-names klasses]
   (let [klasses (when klasses (into-array klasses))]
     (-> (w/fields field-names)
-        (LzoTextDelimited. "\t" klasses))))
+        (LzoTextDelimited. "\t"))))
 
 (defn thrift-b64-line [klass]
   (LzoThriftB64LineScheme. klass))
