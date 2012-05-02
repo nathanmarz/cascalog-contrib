@@ -5,7 +5,6 @@
                  [cascalog/elephant-bird "2.2.3-SNAPSHOT"]
                  [hadoop-lzo "0.4.15"]]
   :exclusions [yamlbeans
-               com.google/protobuf-java
                com.hadoop/hadoop-lzo
                org.apache.thrift/libthrift
                org.apache.pig/pig
