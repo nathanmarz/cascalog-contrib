@@ -6,9 +6,9 @@ Based on the excellent work in Elephant-Bird:
 
 ## Usage
 
-Note that this module requires Cascalog 1.9.0-wip. Add the following to `project.clj`:
+Note that this module requires Cascalog 1.9.0-wip10. Add the following to `project.clj`:
 
-    [cascalog-lzo "0.1.0-wip"]
+    [cascalog-lzo "0.1.0-wip12"]
 
 Stay tuned for updates!
 
@@ -16,8 +16,8 @@ Stay tuned for updates!
 
 On OS X:
 
-1. Install HomeBrew
-2. brew install lzo
+1. Install MacPorts
+2. sudo port install lzo
 3. If you're on Lion, you'll have to re-install your java development headers [here](http://connect.apple.com/cgi-bin/WebObjects/MemberSite.woa/wa/download?path=%2FDeveloper_Tools%2Fjava_for_mac_os_x_10.7_update_1_developer_package%2Fjavadeveloper_for_mac_os_x_10.7__11m3527.dmg&wosid=Mo5ndLZsjioK2DIXcKKGLmyLffK).
 4. Download the [lzo native libs](https://github.com/nathanmarz/cascalog-contrib/downloads) and place them in `/opt/local/lib`.
 
