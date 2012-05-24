@@ -1,8 +1,8 @@
 (def shared
   '[[cascalog "1.9.0-wip10"]
-    [elephantdb/elephantdb-cascading "0.3.2"]])
+    [yieldbot/elephantdb-cascading "0.3.2"]])
 
-(defproject cascalog-elephantdb "0.3.2"
+(defproject yieldbot/cascalog-elephantdb "0.3.2"
   :source-path "src/clj"
   :java-source-path "src/jvm"
   :javac-options {:debug "true" :fork "true"}
