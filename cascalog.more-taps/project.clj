@@ -1,7 +1,6 @@
 (defproject cascalog-more-taps "0.2.0"
   :description "Taps for Cascalog"
-  :repositories {"conjars" "http://conjars.org/repo/"
-                 "maven2" "http://repo2.maven.org/maven2"}
+  :repositories {"conjars" "http://conjars.org/repo/"}
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [cascalog "1.8.7"]
                  [cascading/cascading-core "1.2.4"
