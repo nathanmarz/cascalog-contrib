@@ -1,7 +1,7 @@
-(defproject cascalog-lzo "0.1.0-wip12"
+(defproject cascalog-lzo "0.1.1-SNAPSHOT"
   :description "Lzo compression taps for Cascalog."
   :repositories {"bird" "https://raw.github.com/kevinweil/elephant-bird/master/repo"}
-  :dependencies [[cascalog "1.9.0-wip10"]
+  :dependencies [[cascalog "1.9.0"]
                  [cascalog/elephant-bird "2.2.3-SNAPSHOT"]
                  [hadoop-lzo "0.4.15"]]
   :exclusions [yamlbeans
