@@ -1,4 +1,4 @@
-(defproject cascalog-elasticsearch "0.1.1-SNAPSHOT"
+(defproject cascalog-elasticsearch "0.1.1"
   :description "Elasticsearch integration for Cascading and Cascalog."
   :source-path "src/clj"
   :java-source-path "src/jvm"

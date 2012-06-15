@@ -2,7 +2,7 @@
   '[[cascalog "1.9.0"]
     [incanter/incanter-charts "1.3.0-SNAPSHOT"]])
 
-(defproject cascalog-incanter "0.1.2-SNAPSHOT"
+(defproject cascalog-incanter "0.1.2"
   :description "Incanter integration for Cascalog."
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
                      [lein-multi "1.1.0-SNAPSHOT"]

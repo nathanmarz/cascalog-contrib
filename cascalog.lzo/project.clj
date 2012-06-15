@@ -1,4 +1,4 @@
-(defproject cascalog-lzo "0.1.1-SNAPSHOT"
+(defproject cascalog-lzo "0.1.1"
   :description "Lzo compression taps for Cascalog."
   :repositories {"bird" "https://raw.github.com/kevinweil/elephant-bird/master/repo"}
   :dependencies [[cascalog "1.9.0"]
