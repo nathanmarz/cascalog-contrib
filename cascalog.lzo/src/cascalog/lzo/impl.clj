@@ -1,8 +1,8 @@
 (ns cascalog.lzo.impl
   (:require [cascalog.workflow :as w])
   (:import [com.twitter.elephantbird.cascading2.scheme
-            LzoTextLine LzoTextDelimited LzoThriftB64LineScheme
-            LzoProtobufB64LineScheme]))
+            LzoTextLine LzoTextDelimited LzoThriftScheme
+            LzoProtobufScheme]))
 
 (defn text-line
   ([] (LzoTextLine.))
@@ -15,10 +15,10 @@
 (defn delimited [field-names klasses]
   (let [klasses (when klasses (into-array klasses))]
     (-> (w/fields field-names)
-        (LzoTextDelimited. "\t" klasses))))
+        (LzoTextDelimited. "\t"))))
 
 (defn thrift-b64-line [klass]
-  (LzoThriftB64LineScheme. klass))
+  (LzoThriftScheme. klass))
 
 (defn proto-b64-line [klass]
-  (LzoProtobufB64LineScheme. klass))
+  (LzoProtobufScheme. klass))

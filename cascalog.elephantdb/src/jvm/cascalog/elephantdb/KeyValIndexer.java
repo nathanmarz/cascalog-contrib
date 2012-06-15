@@ -1,7 +1,6 @@
 package cascalog.elephantdb;
 
 import cascalog.Util;
-import elephantdb.document.Document;
 import elephantdb.document.KeyValDocument;
 import elephantdb.persistence.Persistence;
 
@@ -14,7 +13,7 @@ public class KeyValIndexer extends ClojureIndexer {
         super(spec);
     }
 
-    public void index(Persistence lp, Document document) throws IOException {
+    public void index(Persistence lp, Object document) throws IOException {
         if(this.fn==null)
             this.fn = Util.bootFn(this.spec);
 
