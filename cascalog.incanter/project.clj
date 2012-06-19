@@ -1,6 +1,6 @@
 (def shared
   '[[cascalog "1.9.0"]
-    [incanter/incanter-charts "1.3.0-SNAPSHOT"]])
+    [incanter/incanter-charts "1.3.0"]])
 
 (defproject cascalog-incanter "0.1.2"
   :description "Incanter integration for Cascalog."
