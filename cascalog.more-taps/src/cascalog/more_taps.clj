@@ -3,7 +3,7 @@
   (:require [cascalog.tap :as tap]
             [cascalog.vars :as v]
             [cascalog.workflow :as w])
-  (:import [cascading.scheme TextDelimited WritableSequenceFile]
+  (:import [cascading.scheme.hadoop TextDelimited WritableSequenceFile]
            [cascading.tuple Fields]
            [org.pingles.cascading.protobuf ProtobufSequenceFileScheme]))
 
