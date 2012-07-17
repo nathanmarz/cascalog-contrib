@@ -13,5 +13,5 @@ Additional taps for Cascalog.
 Add the following to project.clj:
 
 ```
-[cascalog-more-taps "0.2.0"]
+[cascalog-more-taps "0.3.0-SNAPSHOT"]
 ```
