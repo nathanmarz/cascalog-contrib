@@ -13,5 +13,7 @@
                    (sprint "bbb"))
             ccc ([:tmp-dirs ccc-path]
                    (sprint "ccc"))
-            ddd ([:deps :all]
-                   (sprint "ddd"))))
+            ddd ([:deps [bbb ccc] :tmp-dirs ddd-path]
+                  (sprint "ddd")
+            eee ([:deps :all]
+                  (sprint "eee")))))
