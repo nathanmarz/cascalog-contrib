@@ -2,10 +2,7 @@
   (:use cascalog.api)
   (:require [cascalog.tap :as tap]
             [cascalog.vars :as v]
-            [cascalog.workflow :as w])
-  (:import [cascading.scheme.hadoop TextDelimited WritableSequenceFile]
-           [cascading.tuple Fields]
-           [org.pingles.cascading.protobuf ProtobufSequenceFileScheme]))
+            [cascalog.workflow :as w]))
 
 (defn- delimited
   [field-seq delim & {:keys [classes skip-header?]}]
@@ -86,49 +83,4 @@
   [path key-type value-type & opts]
   (let [scheme (-> (:outfields (apply array-map opts) Fields/ALL)
                    (writable-sequence-file key-type value-type))]
-    (apply tap/lfs-tap scheme path opts)))
-
-(defn protobuf-sequence-file [type field-names]
-  (ProtobufSequenceFileScheme. type (w/fields field-names)))
-
-(defn hfs-protobuf
-"
-  Creates a tap on HDFS using Protocol Buffer scheme in
-  sequence file format. Different filesystems can be selected by using 
-  different prefixes for `path`. 
-
-  To use, prefix a scheme to the 'stringPath'.
-  Where hdfs://... will denonte Dfs, file://... will denote Lfs, 
-  and s3://aws_id:aws_secret@bucket/... will denote S3fs.
-
-  Supports keyword option for `:outfields`. See `cascalog.tap/hfs-tap`
-  for more keyword arguments.
-
-  See http://www.cascading.org/javadoc/cascading/tap/Hfs.html and
-  http://www.cascading.org/javadoc/cascading/scheme/SequenceFile.html
-"
-  [path type & opts]
-  (let [scheme (->> (:outfields (apply array-map opts) Fields/ALL) 
-                 (protobuf-sequence-file type))]
-    (apply tap/hfs-tap scheme path opts)))
-
-(defn lfs-protobuf
-"
-  Creates a tap on local file system using Protocol Buffer scheme in
-  sequence file format. Different filesystems can be selected by using 
-  different prefixes for `path`.
-
-  To use, prefix a scheme to the 'stringPath'.
-  Where hdfs://... will denonte Dfs, file://... will denote Lfs, 
-  and s3://aws_id:aws_secret@bucket/... will denote S3fs.
-
-  Supports keyword option for `:outfields`. See `cascalog.tap/hfs-tap`
-  for more keyword arguments.
-
-  See http://www.cascading.org/javadoc/cascading/tap/Hfs.html and
-  http://www.cascading.org/javadoc/cascading/scheme/SequenceFile.html
-"
-  [path type & opts]
-  (let [scheme (->> (:outfields (apply array-map opts) Fields/ALL) 
-                 (protobuf-sequence-file type))]
     (apply tap/lfs-tap scheme path opts)))
