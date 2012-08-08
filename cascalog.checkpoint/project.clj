@@ -11,10 +11,10 @@
   :profiles {:all {:dependencies ~shared}
              :1.3
              {:dependencies
-              [[org.clojure/clojure "1.3.0"]]},
+              [[org.clojure/clojure "1.3.0"]]}
              :1.2
              {:dependencies
-              [[org.clojure/clojure "1.2.1"]]},
+              [[org.clojure/clojure "1.2.1"]]}
              :dev
              {:dependencies
               [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
