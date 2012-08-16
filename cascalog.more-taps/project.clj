@@ -1,4 +1,4 @@
-(defproject cascalog-more-taps "0.3.0-SNAPSHOT"
+(defproject cascalog-more-taps "0.3.0"
   :description "Taps for Cascalog"
   :url "https://github.com/nathanmarz/cascalog-contrib"
   :min-lein-version "2.0.0"
