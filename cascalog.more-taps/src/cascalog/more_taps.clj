@@ -4,8 +4,7 @@
             [cascalog.vars :as v]
             [cascalog.workflow :as w])
   (:import [cascading.scheme.hadoop TextDelimited WritableSequenceFile]
-           [cascading.tuple Fields]
-           [org.pingles.cascading.protobuf ProtobufSequenceFileScheme]))
+           [cascading.tuple Fields]))
 
 (defn- delimited
   [field-seq delim & {:keys [classes skip-header?]}]
