@@ -1,10 +1,7 @@
-(defproject cascalog-more-taps "0.2.0"
+(defproject cascalog-more-taps "0.2.1"
   :description "Taps for Cascalog"
-  :dependencies [[org.clojure/clojure "1.3.0"]
-                 [cascalog "1.8.7"]
-                 [cascading/cascading-core "1.2.4"
-                  :exclusions [org.codehaus.janino/janino
-                               thirdparty/jgrapht-jdk1.6
-                               riffle/riffle]]
+  :dependencies [[org.clojure/clojure "1.4.0"]
+                 [cascalog "1.9.0"]
+                 [cascading/cascading-hadoop "2.0.2-wip-324"]
                  [org.pingles/cascading.protobuf "0.0.1"]]
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]])

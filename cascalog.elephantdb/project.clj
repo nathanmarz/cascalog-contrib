@@ -10,6 +10,6 @@
                      [midje-cascalog "0.4.0"
                       :exclusions [org.clojure/clojure]]
                      [hadoop-util "0.2.8"]]
-  :dependencies ~(conj shared '[org.clojure/clojure "1.3.0"])
+  :dependencies ~(conj shared '[org.clojure/clojure "1.4.0"])
   :multi-deps {"1.2" ~(conj shared '[org.clojure/clojure "1.2.1"])
-               "1.4" ~(conj shared '[org.clojure/clojure "1.4.0"])})
+               "1.3" ~(conj shared '[org.clojure/clojure "1.3.0"])})

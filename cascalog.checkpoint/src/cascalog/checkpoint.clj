@@ -24,7 +24,7 @@
 (defstruct Workflow ::fs ::graph-atom ::checkpoint-dir ::last-node-atom)
 
 (defn mk-workflow [checkpoint-dir]
-  (let [fs (h/filesystem)]
+  (let [fs (.getFileSystem (h/path checkpoint-dir) (h/configuration (conf/project-conf)))]
     (h/mkdirs fs checkpoint-dir)
     (struct Workflow fs (atom {}) checkpoint-dir (atom nil))))
 
