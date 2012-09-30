@@ -80,7 +80,7 @@
     (u/throw-runtime "Workflow failed")))
 
 (defn exec-workflow! [workflow]
-  (let [fs (h/filesystem)
+  (let [fs (::fs workflow)
         log (Logger/getLogger "checkpointed-workflow")
         sem (Semaphore. 0)
         nodes (into {}
