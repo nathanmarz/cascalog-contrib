@@ -24,7 +24,7 @@
 (defstruct Workflow ::fs ::graph-atom ::checkpoint-dir ::last-node-atom)
 
 (defn mk-workflow [checkpoint-dir]
-  (let [fs (h/filesystem)]
+  (let [fs (.getFileSystem (h/path checkpoint-dir) (h/configuration (conf/project-conf)))]
     (h/mkdirs fs checkpoint-dir)
     (struct Workflow fs (atom {}) checkpoint-dir (atom nil))))
 
@@ -80,7 +80,7 @@
     (u/throw-runtime "Workflow failed")))
 
 (defn exec-workflow! [workflow]
-  (let [fs (h/filesystem)
+  (let [fs (::fs workflow)
         log (Logger/getLogger "checkpointed-workflow")
         sem (Semaphore. 0)
         nodes (into {}
