@@ -80,8 +80,7 @@
     (u/throw-runtime "Workflow failed")))
 
 (defn exec-workflow! [workflow]
-  (let [fs (h/filesystem)
-        log (Logger/getLogger "checkpointed-workflow")
+  (let [log (Logger/getLogger "checkpointed-workflow")
         sem (Semaphore. 0)
         nodes (into {}
                     (for [[k v] @(::graph-atom workflow)
@@ -89,7 +88,7 @@
                       [k (assoc v
                            ::status status-atom
                            ::runner-thread (mk-runner
-                                            fs
+                                            (::fs workflow)
                                             (str (::checkpoint-dir workflow)
                                                  "/" k)
                                             v
