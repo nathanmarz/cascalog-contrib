@@ -3,7 +3,7 @@
     [jackknife "0.1.2"]
     [hadoop-util "0.2.8"]])
 
-(defproject yieldbot/cascalog-checkpoint "0.2.1"
+(defproject cascalog-checkpoint "0.2.1-SNAPSHOT"
   :description "Workflow checkpoints for the masses."
   :dev-dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
                      [lein-multi "1.1.0-SNAPSHOT"]
