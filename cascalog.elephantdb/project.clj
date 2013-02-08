@@ -2,7 +2,7 @@
   '[[cascalog "1.10.0"]
     [elephantdb/elephantdb-cascading "0.3.5"]])
 
-(defproject elephantdb/cascalog-elephantdb "0.3.5-SNAPSHOT"
+(defproject elephantdb/cascalog-elephantdb "0.3.5"
   :min-lein-version "2.0.0"
   :source-paths ["src/clj"]
   :java-source-paths ["src/jvm"]
