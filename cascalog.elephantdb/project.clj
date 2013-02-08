@@ -1,6 +1,6 @@
 (def shared
   '[[cascalog "1.10.0"]
-    [elephantdb/elephantdb-cascading "0.3.5-SNAPSHOT"]])
+    [elephantdb/elephantdb-cascading "0.3.5"]])
 
 (defproject elephantdb/cascalog-elephantdb "0.3.5-SNAPSHOT"
   :min-lein-version "2.0.0"
@@ -14,8 +14,10 @@
              :1.5 {:dependencies [[org.clojure/clojure "1.5.0-RC1"]]}
              :dev
              {:dependencies
-              [[org.apache.hadoop/hadoop-core "0.20.2-dev"]
+              [[midje "1.5-alpha9"]
                [midje-cascalog "0.4.0"
                 :exclusions [org.clojure/clojure]]
-               [hadoop-util "0.2.8"]]
-              :plugins [[lein-midje "2.0.3"]]}})
+               [hadoop-util "0.2.9"]]
+              :plugins [[lein-midje "3.0-alpha4"]]}
+             :provided
+             {:dependencies [[org.apache.hadoop/hadoop-core "0.20.2-dev"]]}})
