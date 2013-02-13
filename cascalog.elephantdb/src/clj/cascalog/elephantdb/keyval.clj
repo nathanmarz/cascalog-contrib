@@ -10,30 +10,36 @@
            [org.apache.hadoop.conf Configuration]
            [elephantdb Utils]
            [elephantdb.partition ShardingScheme]
-           [elephantdb.serialize Serializer]
            [org.apache.hadoop.io BytesWritable]))
+
+(defn- test-array
+  [t]
+  (let [check (type (t []))]
+    (fn [arg] (instance? check arg))))
+
+(def ^{:private true} byte-array?
+  (test-array byte-array))
 
 (defmapop [shard [^ShardingScheme scheme shard-count]]
   "Returns the shard to which the supplied shard-key should be
   routed."
-  [shard-key]
+  [^bytes shard-key]
+  {:pre [(byte-array? shard-key)]}
   (.shardIndex scheme shard-key shard-count))
 
-(defmapop [mk-sortable-key [^Serializer serializer]]
-  [shard-key]
-  (BytesWritable.
-   (.serialize serializer shard-key)))
+(defmapop mk-sortable-key [^bytes shard-key]
+  {:pre [(byte-array? shard-key)]}
+  (BytesWritable. shard-key))
 
 (defn elephant<-
   [elephant-tap kv-src]
   (let [spec        (.getSpec elephant-tap)
         scheme      (.getShardScheme spec)
-        shard-count (.getNumShards spec)
-        serializer  (Utils/makeSerializer spec)]
+        shard-count (.getNumShards spec)]
     (<- [!shard !key !value]
         (kv-src !keyraw !valueraw)
         (shard [scheme shard-count] !keyraw :> !shard)
-        (mk-sortable-key [serializer] !keyraw :> !sort-key)
+        (mk-sortable-key !keyraw :> !sort-key)
         (:sort !sort-key)
         ((IdentityBuffer.) !keyraw !valueraw :> !key !value))))
 

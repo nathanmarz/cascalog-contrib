@@ -1,7 +1,6 @@
 (ns cascalog.elephantdb.conf
   (:require [cascalog.workflow :as w])
   (:import [elephantdb.cascading ElephantDBTap$Args]
-           [elephantdb.cascading KeyValGateway]
            [java.util ArrayList]))
 
 (defn convert-args
