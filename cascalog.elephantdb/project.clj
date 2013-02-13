@@ -1,6 +1,5 @@
 (def shared
-  '[[cascalog "1.10.1-SNAPSHOT"
-     :exclusions [cascading/cascading-hadoop]]
+  '[[cascalog "1.10.1-SNAPSHOT"]
     [elephantdb/elephantdb-cascading "0.3.6-SNAPSHOT"]])
 
 (defproject elephantdb/cascalog-elephantdb "0.3.6-SNAPSHOT"
